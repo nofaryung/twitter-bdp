@@ -19,10 +19,10 @@ app = Flask(__name__)
 def get_db_connection():
     conn = psycopg2.connect(
         host='postgres-service', 
-        dbname='postgres', 
+        dbname='twitty', 
         user='postgresuser',  
         password='postgrespassword',  
-        port='5432'  
+        port='5432'
     )
     return conn
 
@@ -32,7 +32,7 @@ def home():
     return "home page"
 
 @app.route('/get_tweet')
-def get_tweet(tweet_id = None):
+def get_tweet(tweet_id=None):
     try:
         if not tweet_id:
             tweet_id = request.args.get('tweet_id')
@@ -42,17 +42,17 @@ def get_tweet(tweet_id = None):
         conn = get_db_connection()
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         
-        cur.execute("SELECT tweet FROM tweets WHERE tweet_id = %s;", (tweet_id,))
+        # Example query from tweets_by_likes. Adjust as necessary for your application logic
+        cur.execute("SELECT content FROM tweets_by_likes WHERE tweet_id = %s;", (tweet_id,))
         row = cur.fetchone()
 
         if row:
-            tweet = row['tweet']
-            return tweet, 200
+            tweet = row['content']  # Ensure column name matches your schema
+            return jsonify(tweet=tweet), 200
         else:
             return jsonify({'error': 'Tweet not found'}), 404
 
     except Exception as e:
-        # Handle exceptions
         return jsonify({'error': str(e)}), 500
 
 
