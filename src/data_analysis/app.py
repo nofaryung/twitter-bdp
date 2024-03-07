@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
-from cassandra.cluster import Cluster
+import psycopg2
+import psycopg2.extras
 
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -13,6 +14,19 @@ nltk.download('wordnet')
 
 app = Flask(__name__)
 
+
+
+def get_db_connection():
+    conn = psycopg2.connect(
+        host='postgres-service', 
+        dbname='postgres', 
+        user='postgresuser',  
+        password='postgrespassword',  
+        port='5432'  
+    )
+    return conn
+
+
 @app.route('/')
 def home():
     return "home page"
@@ -25,19 +39,17 @@ def get_tweet(tweet_id = None):
             if not tweet_id:
                 return jsonify({'error': 'Query parameter is missing'}), 400
 
-        cluster = Cluster(['127.0.0.1'])
-        session = cluster.connect()
-        session.set_keyspace('twitter')
-
+        conn = get_db_connection()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
         
-        statement = f"SELECT tweet FROM tweets where tweet_id = '{tweet_id}';"
-        result_set = session.execute(statement)._current_rows
-        rows = list(result_set)
+        cur.execute("SELECT tweet FROM tweets WHERE tweet_id = %s;", (tweet_id,))
+        row = cur.fetchone()
 
-        tweet = rows[0][0]
-
-        # Return the query result as JSON
-        return tweet, 200
+        if row:
+            tweet = row['tweet']
+            return tweet, 200
+        else:
+            return jsonify({'error': 'Tweet not found'}), 404
 
     except Exception as e:
         # Handle exceptions
@@ -53,6 +65,7 @@ def get_tweet_sentiment():
         return jsonify({'error': 'Query parameter is missing'}), 400
     
     tweet, status_code = get_tweet(tweet_id=tweet_id)
+
     if status_code != 200:
         return tweet, status_code
     else:
