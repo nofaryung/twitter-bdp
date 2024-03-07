@@ -1,2 +1,2 @@
-FROM postgres:16.2-alpine
+FROM postgres:latest
 COPY schema.sql /docker-entrypoint-initdb.d/
