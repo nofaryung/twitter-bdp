@@ -25,17 +25,18 @@ spec:
     spec:
       containers:
       - name: digest
-        image:  yungmannofar/digest
+        image:  yungmannofar/data_digest
         ports:
         - containerPort: 8081
         env:
         - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: postgres-secret-config
-              key: postgres-password 
+          value: postgrespassword
+        - name: POSTGRES_DB
+          value: postgres 
+        - name: POSTGRES_USER
+          value: postgresuser
         - name: DB_URL
           valueFrom:
             configMapKeyRef:
               name: postgres-config  
-              key: postgres-service
+              key: url
