@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Digest Twitter Thoughts</title>
+</head>
+<body>
+    <h2>Digest Twitter Thoughts</h2>
+    <form action="/digest" method="post">
+        <label for="tokens">Enter Tokens (comma-separated):</label><br>
+        <input type="text" id="tokens" name="tokens"><br>
+        <input type="radio" id="csv" name="source" value="csv">
+        <label for="csv">CSV</label><br>
+        <input type="radio" id="api" name="source" value="api">
+        <label for="api">API</label><br>
+        <button type="submit">Digest</button>
+    </form>
+</body>
+</html>

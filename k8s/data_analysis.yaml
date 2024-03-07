@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: twitter-analysis-service
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8082
+    targetPort: 8082
+  selector:
+    app: twitter-analysis  
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: twitter-analysis
+spec:
+  serviceName: "twitter-analysis"
+  replicas: 3
+  selector:
+    matchLabels:
+      app: twitter-analysis
+  template:
+    metadata:
+      labels:
+        app: twitter-analysis
+    spec:
+      containers:
+      - name: twitter-analysis
+        image: nginx:latest
+        ports:
+        - containerPort: 8082
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "twitty-storage"
+      resources:
+        limits:
+          memory: "4Gi"
+          cpu: "2"
+        requests:
+          cpu: "1"
