@@ -1,6 +1,4 @@
-nltk
-cassandra-driver
 Flask==2.1.2
 Jinja2==3.1.2
 Werkzeug==2.1.1
-psycopg2-binary
+requests==2.26.0
