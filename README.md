@@ -1,6 +1,6 @@
 
 # twitter insight k8s service 📝  
-bla bla
+The Twitter data processing application is designed to process and analyze Twitter data, providing insights into tweet distributions by author, sentiment analysis, and more. The application is containerized and designed to run within a Kubernetes environment, ensuring scalability and ease of deployment.
 
 ## Get Started 🚀  
 we are using minikube to  run the k8s cluster
@@ -10,58 +10,26 @@ we are using minikube to  run the k8s cluster
 `minikube start`
 `minikube addons enable ingress`
 
-
-## Build the images 🔥  
-Build all the images
-
-```sh
-make
-```
-
-Or build specific images
+### start minikube
+minikube start
 
 ```sh
-make frontend
-```
-
-### Create namespace
-
-Create namespace for the k8s resources
-
-```sh
-kubectl create namespace twitty
-```
-
-### Create deployments
-
-Create deployments and volumes
-
-```sh
-kubectl apply -f ./k8s -n twitty
+kubectl apply -f .\postgres.yaml
+kubectl apply -f .\data_digest.yaml
+kubectl apply -f .\frontend.yaml
+kubectl apply -f .\data_analysis.yaml
 ```
 
 ## Access the frontend
 
-Enable port forwarding
-
-you can track the deployment with the minikube dashboard (`minikube dashboard`) or via kubectl.
-to access the service go port forwarding...or go ingress, in which case:
-- go `minikube tunnel` to allow ingress calls into minikube to happen on yr 127.0.0.1.
-- edit yr hosts file (`/etc/hosts` on unixlikes) and add `127.0.0.1 twitty.com`
-
-the UI should be available via `http://twitty.com` in yr browser.
+to access the frontend and interact with the application run:
+minikube service frontend-service to access
 
 
 ## Cleanup
 
-Delete all resources
+to delete all resources run the following:
 
-```sh
-kubectl delete -f ./k8s -n twitty
-```
+minikube stop
 
-Delete the namespace
-
-```sh
-kubectl delete namespace twitty
-```
+minikube delete
