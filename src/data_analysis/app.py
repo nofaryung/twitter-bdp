@@ -110,12 +110,23 @@ def get_tweet(tweet_id=None):
 
 @app.route('/get_tweet_sentiment')
 def get_tweet_sentiment():
-    author_name = request.args.get('author')
+    author_name = request.args.get('tokens')
     if not author_name:
-        return jsonify({'error': 'Query parameter "author" is missing'}), 400
+        return jsonify({'error': 'Query parameter "tokens" is missing'}), 400
     
     try:
-
+        dummy_tweets = [
+        {'author': 'AuthorA', 'content': "I love sunny days, they're amazing!"},
+        {'author': 'AuthorB', 'content': "This is quite disappointing."},
+        {'author': 'AuthorA', 'content': "I'm not sure how I feel about this."},
+        {'author': 'AuthorC', 'content': "Today is a great day!"},
+        {'author': 'AuthorB', 'content': "This is the worst!"},
+        ]
+    
+        # Filter tweets by the requested author
+        tweets = [tweet for tweet in dummy_tweets if tweet['author'] == author_name]
+    
+        '''
         conn = get_db_connection()
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
@@ -125,7 +136,8 @@ def get_tweet_sentiment():
 
         if not tweets:
             return jsonify({'error': 'No tweets found for this author'}), 404
-        
+        '''
+
         sentiments = []
         for tweet in tweets:
             processed_tweet = preprocess_text(tweet['content'])
@@ -156,7 +168,8 @@ def preprocess_text(text):
 def get_sentiment(text):
     analyzer = SentimentIntensityAnalyzer()
     scores = analyzer.polarity_scores(text)
-    sentiment = 1 if scores['pos'] > 0.3 else 0
+    #sentiment = 1 if scores['pos'] > 0.3 else 0
+    sentiment = scores['pos']
     return sentiment
 
 if __name__ == '__main__':

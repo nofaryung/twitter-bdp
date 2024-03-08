@@ -11,7 +11,8 @@ def home():
 def digest():
     tokens = request.form['tokens']
     # Add your data processing logic here based on the tokens and selected source
-    response = requests.get(f"http://backend-service:5000/get_tweet_sentiment?tweet_id={tokens}")
+    #response = requests.get(f"http://backend-service:5000/get_tweet_sentiment?tweet_id={tokens}")
+    response = requests.get(f"http://127.0.0.1:5000/get_tweet_sentiment?tokens={tokens}")
 
     return response.json()
 
