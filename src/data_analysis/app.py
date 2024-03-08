@@ -1,6 +1,8 @@
-from flask import Flask, jsonify, request
-import psycopg2
-import psycopg2.extras
+from flask import Flask, jsonify, request, send_file
+# import psycopg2
+# import psycopg2.extras
+
+import io
 
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
@@ -11,6 +13,8 @@ from nltk.stem import WordNetLemmatizer
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
+
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 
@@ -27,9 +31,56 @@ def get_db_connection():
     return conn
 
 
+def get_tweets_distribution():
+    '''
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT author, COUNT(tweet_id) as tweet_count FROM user_tweets GROUP BY author;")
+    author_data = cur.fetchall()
+    conn.close()
+    '''
+
+    # mock data for tests
+    author_data = [
+        ('AuthorA', 120),
+        ('AuthorB', 90),
+        ('AuthorC', 150),
+        ('AuthorD', 30),
+        ('AuthorE', 60)
+    ]
+
+    authors = [row[0] for row in author_data]
+    tweet_counts = [row[1] for row in author_data]
+
+    plt.figure(figsize=(10, 6))
+    plt.bar(authors, tweet_counts, color='skyblue')
+    plt.xlabel('Authors')
+    plt.ylabel('Number of Tweets')
+    plt.title('Distribution of Tweets by Author')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    
+    return buf
+
+
+
 @app.route('/')
 def home():
     return "home page"
+
+
+@app.route('/tweets_distribution')
+def tweets_distribution():
+    try:
+        img = get_tweets_distribution()
+        return send_file(img, mimetype='image/png')
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
 
 @app.route('/get_tweet')
 def get_tweet(tweet_id=None):
