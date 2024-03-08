@@ -110,21 +110,32 @@ def get_tweet(tweet_id=None):
 
 @app.route('/get_tweet_sentiment')
 def get_tweet_sentiment():
-    dict = {}
-    tweet_id = request.args.get('tweet_id')
-    if not tweet_id:
-        return jsonify({'error': 'Query parameter is missing'}), 400
+    author_name = request.args.get('author')
+    if not author_name:
+        return jsonify({'error': 'Query parameter "author" is missing'}), 400
     
-    tweet, status_code = get_tweet(tweet_id=tweet_id)
+    try:
 
-    if status_code != 200:
-        return tweet, status_code
-    else:
-        dict["tweet"] = tweet
-        preprocess_tweet = preprocess_text(tweet)
-        sentiment = get_sentiment(preprocess_tweet)
-        dict["sentiment"] = sentiment
-        return jsonify(dict), 200
+        conn = get_db_connection()
+        cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+        # Query all tweets from the specified author
+        cur.execute("SELECT content FROM user_tweets WHERE author = %s;", (author_name,))
+        tweets = cur.fetchall()
+
+        if not tweets:
+            return jsonify({'error': 'No tweets found for this author'}), 404
+        
+        sentiments = []
+        for tweet in tweets:
+            processed_tweet = preprocess_text(tweet['content'])
+            sentiment = get_sentiment(processed_tweet)
+            sentiments.append({'tweet': tweet['content'], 'sentiment': sentiment})
+
+        return jsonify(sentiments), 200
+    
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
     
 def preprocess_text(text):
     # Tokenize the text
