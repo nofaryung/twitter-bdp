@@ -2,17 +2,67 @@
 <html>
 <head>
     <title>Digest Twitter Thoughts</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            color: #444;
+            text-align: center;
+            padding: 10px 0;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 0 10px 0 rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            margin: 10px 0 5px;
+            display: block;
+            color: #666;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #170e0e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #9b8e91;
+        }
+    </style>
 </head>
 <body>
-    <h2>Digest Twitter Thoughts</h2>
+    <h2>Get sentiments of inputed authors tweets</h2>
     <form action="/digest" method="post">
-        <label for="tokens">Enter Tokens (comma-separated):</label><br>
+        <label for="tokens">Enter authors name</label><br>
         <input type="text" id="tokens" name="tokens"><br>
-        <input type="radio" id="csv" name="source" value="csv">
-        <label for="csv">CSV</label><br>
-        <input type="radio" id="api" name="source" value="api">
-        <label for="api">API</label><br>
-        <button type="submit">Digest</button>
+        <button type="submit">submit</button>
     </form>
+
+    <h2>Get tweet disribution by author</h2>
+    <form action="/tweets_distribution" method="post">
+        <button type="submit">Get tweet distribution</button>
+    </form>
+
 </body>
 </html>

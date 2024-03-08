@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: yungmannofar/database #postgres:latest
+        image: matthewkoton/database #postgres:latest
         ports:
         - containerPort: 5432
           name: postgres
