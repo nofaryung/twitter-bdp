@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, request, send_file
-# import psycopg2
-# import psycopg2.extras
+import psycopg2
+import psycopg2.extras
 
 import io
 
@@ -21,25 +21,29 @@ app = Flask(__name__)
 
 
 def get_db_connection():
-    conn = psycopg2.connect(
-        host='postgres-service', 
-        dbname='twitty', 
-        user='postgresuser',  
-        password='postgrespassword',  
-        port='5432'
-    )
+
+    dbname = 'twitty'  # The database name
+    user = 'postgresuser'  # The database user
+    password = 'postgrespassword'  # The user's password
+    host = 'postgres-service'  # Host address of the PostgreSQL server
+    port = '5432'  # Port number
+
+
+    # Connect to the database
+    conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
+    
+
     return conn
 
 
 def get_tweets_distribution():
-    '''
+    
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT author, COUNT(tweet_id) as tweet_count FROM user_tweets GROUP BY author;")
     author_data = cur.fetchall()
     conn.close()
     '''
-
     # mock data for tests
     author_data = [
         ('AuthorA', 120),
@@ -48,7 +52,7 @@ def get_tweets_distribution():
         ('AuthorD', 30),
         ('AuthorE', 60)
     ]
-
+    '''
     authors = [row[0] for row in author_data]
     tweet_counts = [row[1] for row in author_data]
 
@@ -114,6 +118,7 @@ def get_tweet_sentiment():
         return jsonify({'error': 'Query parameter "tokens" is missing'}), 400
     
     try:
+        '''
         dummy_tweets = [
         {'author': 'AuthorA', 'content': "I love sunny days, they're amazing!"},
         {'author': 'AuthorB', 'content': "This is quite disappointing."},
@@ -121,21 +126,22 @@ def get_tweet_sentiment():
         {'author': 'AuthorC', 'content': "Today is a great day!"},
         {'author': 'AuthorB', 'content': "This is the worst!"},
         ]
-    
-        # Filter tweets by the requested author
-        tweets = [tweet for tweet in dummy_tweets if tweet['author'] == author_name]
-    
         '''
+        # Filter tweets by the requested author
+        # tweets = [tweet for tweet in dummy_tweets if tweet['author'] == author_name]
+    
+        
         conn = get_db_connection()
         cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
         # Query all tweets from the specified author
-        cur.execute("SELECT content FROM user_tweets WHERE author = %s;", (author_name,))
+        # cur.execute("SELECT content FROM user_tweets WHERE author = %s;", (author_name,))
+        cur.execute("SELECT content FROM user_tweets WHERE author = %s ORDER BY tweet_id DESC LIMIT 5;", (author_name,))
         tweets = cur.fetchall()
 
         if not tweets:
             return jsonify({'error': 'No tweets found for this author'}), 404
-        '''
+        
 
         sentiments = []
         for tweet in tweets:
@@ -151,6 +157,7 @@ def get_tweet_sentiment():
 
 def get_sentiment_visualization(author_name):
     # Replace this part with your actual logic to fetch tweets
+    '''
     dummy_tweets = [
         {'author': 'AuthorA', 'content': "I love sunny days, they're amazing!"},
         {'author': 'AuthorB', 'content': "This is quite disappointing."},
@@ -164,14 +171,15 @@ def get_sentiment_visualization(author_name):
     cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     # Query all tweets from the specified author
-    cur.execute("SELECT content FROM user_tweets WHERE author = %s;", (author_name,))
+    #cur.execute("SELECT content FROM user_tweets WHERE author = %s;", (author_name,))
+    cur.execute("SELECT content FROM user_tweets WHERE author = %s ORDER BY tweet_id DESC LIMIT 5;", (author_name,))
+
     tweets = cur.fetchall()
 
     if not tweets:
         return jsonify({'error': 'No tweets found for this author'}), 404
-    '''
 
-    tweets = [tweet for tweet in dummy_tweets if tweet['author'] == author_name]
+    #tweets = [tweet for tweet in dummy_tweets if tweet['author'] == author_name]
 
     sentiments = [get_sentiment(tweet['content']) for tweet in tweets]
 

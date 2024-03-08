@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: postgres
-        image: matthewkoton/database #postgres:latest
+        image: matthewkoton/database6 #postgres:latest
         ports:
         - containerPort: 5432
           name: postgres
@@ -42,16 +42,9 @@ spec:
         - name: POSTGRES_PASSWORD
           value: postgrespassword
         - name: POSTGRES_DB
-          value: postgres 
+          value: "twitty" 
         - name: POSTGRES_USER
           value: postgresuser
         - name: PGDATA
           value: /var/lib/postgresql/data/twitty
-        volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: postgres-pv-claim
-      volumes:
-      - name: postgres-pv-claim
-        persistentVolumeClaim:
-          claimName: postgres-pv-claim      
-
+   
