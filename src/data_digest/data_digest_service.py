@@ -20,22 +20,19 @@ def digest_data():
     try:
         # Database connection parameters from environment variables
         # dbname = os.getenv("POSTGRES_DB", "twitty")
-        user = os.getenv("POSTGRES_USER", "postgresuser")
-        password = os.getenv("POSTGRES_PASSWORD", "postgrespassword")
-        host = os.getenv("DB_URL", "localhost")
-        port = os.getenv("DB_PORT", "5432")
+        dbname = 'twitty'  # The database name
+        user = 'postgresuser'  # The database user
+        password = 'postgrespassword'  # The user's password
+        host = 'postgres-service'  # Host address of the PostgreSQL server
+        port = '5432'  # Port number
 
-        conn = psycopg2.connect(
-            dbname='twitty',
-            user=user,
-            password=password,
-            host=host
-            # port=port
-        )
+
+        # Connect to the database
+        conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
         cur = conn.cursor()
 
         # Load and preprocess data
-        twitter_df = pd.read_csv('tweets_df.csv', delimiter='	')
+        twitter_df = pd.read_csv('./tweets_df.csv', delimiter='	')
         twitter_df = twitter_df.replace({np.nan: None})
 
         tweets_paritioned_by_word = twitter_df.explode('parsed_content')

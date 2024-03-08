@@ -25,18 +25,15 @@ spec:
     spec:
       containers:
       - name: digest
-        image:  yungmannofar/data_digest
+        image:  matthewkoton/digest
         ports:
         - containerPort: 8081
         env:
         - name: POSTGRES_PASSWORD
           value: postgrespassword
         - name: POSTGRES_DB
-          value: postgres 
+          value: "twitty" 
         - name: POSTGRES_USER
           value: postgresuser
-        - name: DB_URL
-          valueFrom:
-            configMapKeyRef:
-              name: postgres-config  
-              key: url
+        - name: PGDATA
+          value: /var/lib/postgresql/data/twitty
