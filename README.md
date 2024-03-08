@@ -18,6 +18,14 @@ minikube start
 ### Create the pods
 ```sh
 kubectl apply -f .\postgres.yaml
+```
+use kubectl get pods to ensure that postgress is running
+```sh
+kubectl get pods
+```
+
+run the rest of the pods
+```sh
 kubectl apply -f .\data_digest.yaml
 kubectl apply -f .\frontend.yaml
 kubectl apply -f .\data_analysis.yaml
