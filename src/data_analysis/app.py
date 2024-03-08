@@ -106,8 +106,7 @@ def get_tweet(tweet_id=None):
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-
-
+# old function
 @app.route('/get_tweet_sentiment')
 def get_tweet_sentiment():
     author_name = request.args.get('tokens')
@@ -149,6 +148,64 @@ def get_tweet_sentiment():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
+
+def get_sentiment_visualization(author_name):
+    # Replace this part with your actual logic to fetch tweets
+    dummy_tweets = [
+        {'author': 'AuthorA', 'content': "I love sunny days, they're amazing!"},
+        {'author': 'AuthorB', 'content': "This is quite disappointing."},
+        {'author': 'AuthorA', 'content': "I'm not sure how I feel about this."},
+        {'author': 'AuthorC', 'content': "Today is a great day!"},
+        {'author': 'AuthorB', 'content': "This is the worst!"},
+    ]
+
+    '''
+    conn = get_db_connection()
+    cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+    # Query all tweets from the specified author
+    cur.execute("SELECT content FROM user_tweets WHERE author = %s;", (author_name,))
+    tweets = cur.fetchall()
+
+    if not tweets:
+        return jsonify({'error': 'No tweets found for this author'}), 404
+    '''
+
+    tweets = [tweet for tweet in dummy_tweets if tweet['author'] == author_name]
+
+    sentiments = [get_sentiment(tweet['content']) for tweet in tweets]
+
+    # Generate a simple plot
+    plt.figure(figsize=(10, 6))
+    plt.plot(sentiments, marker='o', linestyle='-', color='b')
+    plt.title(f"Sentiment Analysis of {author_name}'s Tweets")
+    plt.ylabel('Sentiment Score')
+    plt.xlabel('Tweet')
+    plt.xticks(range(len(sentiments)), ['Tweet '+str(i+1) for i in range(len(sentiments))], rotation=45)
+    plt.tight_layout()
+
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png', dpi=300)
+    buf.seek(0)
+    plt.close()
+
+    return buf
+    
+
+@app.route('/get_tweet_sentiment_visualization')
+def get_tweet_sentiment_visualization():
+    author_name = request.args.get('tokens')
+    if not author_name:
+        return jsonify({'error': 'Query parameter "author" is missing'}), 400
+    
+    try:
+        img = get_sentiment_visualization(author_name)
+        return send_file(img, mimetype='image/png')
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+
 def preprocess_text(text):
     # Tokenize the text
     tokens = word_tokenize(text.lower())
