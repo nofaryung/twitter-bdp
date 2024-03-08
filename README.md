@@ -6,9 +6,9 @@ The Twitter data processing application is designed to process and analyze Twitt
 we are using minikube to  run the k8s cluster
 
 ## Install minikube
-`pip install minikube/brew install minikube`
-`minikube start`
-`minikube addons enable ingress`
+```sh
+pip install minikube/brew install minikube
+```
 
 ## start minikube
 ```sh
