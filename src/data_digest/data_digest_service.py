@@ -45,25 +45,36 @@ def digest_data():
 
         raw_twitter_df = list(twitter_df[['tweet_id', 'author', 'content', 'country', 'date_time', 'language', 'latitude', 'longitude', 'number_of_likes', 'number_of_shares', 'parsed_content']].itertuples(index=False, name=None))
 
+        print('starting with tables creation')
+
         # tweets_by_likes
         insert_tweets_by_likes = """INSERT INTO tweets_by_likes (tweet_id, author, content, country, date_time, language, latitude, longitude, number_of_likes, number_of_shares, parsed_content) VALUES %s;"""
         execute_values(cur, insert_tweets_by_likes, raw_twitter_df)
+
+        print('Finished creating tweets_by_likes')
 
         # tweets_by_share
         insert_tweets_by_share = """INSERT INTO tweets_by_share (tweet_id, author, content, country, date_time, language, latitude, longitude, number_of_likes, number_of_shares, parsed_content) VALUES %s;"""
         execute_values(cur, insert_tweets_by_share, raw_twitter_df)
 
+        print('Finished creating tweets_by_share')
+
         # user_tweets
         insert_user_tweets = """INSERT INTO user_tweets (tweet_id, author, content, country, date_time, language, latitude, longitude, number_of_likes, number_of_shares, parsed_content) VALUES %s;"""
         execute_values(cur, insert_user_tweets, raw_twitter_df)
+
+        print('Finished creating user_tweets')
 
         # user_tweets
         raw_tweets_paritioned_by_word = list(tweets_paritioned_by_word[['tweet_id', 'author', 'content', 'country', 'date_time', 'language', 'latitude', 'longitude', 'number_of_likes', 'number_of_shares', 'parsed_content']].itertuples(index=False, name=None))
         insert_tweets_by_word = """INSERT INTO tweets_by_word (tweet_id, author, content, country, date_time, language, latitude, longitude, number_of_likes, number_of_shares, parsed_content) VALUES %s;"""
         execute_values(cur, insert_tweets_by_word, raw_tweets_paritioned_by_word)
 
+        print('Finished creating tweets_by_word')
+
         # Commit the transaction
         conn.commit()
+        print('Finished creating all tables')
 
     except Exception as e:
         # Rollback the transaction in case of error
