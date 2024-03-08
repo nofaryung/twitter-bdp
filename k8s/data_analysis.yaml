@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: matthewkoton/backend-flask-app:tag
+        image: matthewkoton/backend-flask-app
         ports:
         - containerPort: 5000
         env:
