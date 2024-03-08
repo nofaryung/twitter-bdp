@@ -15,7 +15,7 @@ pip install minikube/brew install minikube
 minikube start
 ```
 
-### Create the pods 📦
+## Create the pods 📦
 ```sh
 kubectl apply -f .\postgres.yaml
 ```
