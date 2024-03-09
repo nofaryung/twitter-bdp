@@ -247,6 +247,136 @@ def preprocess_text(text):
 
     return processed_text
 
+
+@app.route('/top_tweets')
+def top_tweets():
+    if not is_data_ready():
+        return jsonify({"error": "Data is not yet available, please try again later."}), 503 
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Top 5 tweets by likes
+        cur.execute("SELECT * FROM tweets_by_likes ORDER BY number_of_likes DESC LIMIT 5;")
+        top_likes = cur.fetchall()
+
+        # Top 5 tweets by shares
+        cur.execute("SELECT * FROM tweets_by_share ORDER BY number_of_shares DESC LIMIT 5;")
+        top_shares = cur.fetchall()
+
+        conn.close()
+
+        return jsonify({
+            'top_tweets_by_likes': top_likes,
+            'top_tweets_by_shares': top_shares
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/top_users')
+def top_users():
+    if not is_data_ready():
+        return jsonify({"error": "Data is not yet available, please try again later."}), 503 
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        cur.execute("""
+        SELECT author, COUNT(*) AS tweet_count 
+        FROM user_tweets 
+        GROUP BY author 
+        ORDER BY tweet_count DESC 
+        LIMIT 10;
+        """)
+        top_users = cur.fetchall()
+
+        conn.close()
+
+        return jsonify({'top_users_by_content': top_users})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+
+@app.route('/token_analysis')
+def token_analysis():
+    if not is_data_ready():
+        return jsonify({"error": "Data is not yet available, please try again later."}), 503 
+    token = request.args.get('tokens')
+    if not token:
+        return jsonify({'error': 'Query parameter "token" is missing'}), 400
+    
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # In which country the token is most talked about
+        cur.execute("""
+        SELECT country, COUNT(*) AS mention_count 
+        FROM tweets_by_word 
+        WHERE parsed_content LIKE %s 
+        GROUP BY country 
+        ORDER BY mention_count DESC 
+        LIMIT 1;
+        """, (f'%{token}%',))
+        top_country = cur.fetchone()
+
+        # Top liked person who mentioned token
+        cur.execute("""
+        SELECT author, MAX(number_of_likes) AS max_likes
+        FROM tweets_by_word 
+        WHERE parsed_content LIKE %s 
+        GROUP BY author 
+        ORDER BY max_likes DESC 
+        LIMIT 1;
+        """, (f'%{token}%',))
+        top_liked_person = cur.fetchone()
+
+        # The content of the tweet containing the token with the most likes
+        cur.execute("""
+        SELECT content, author, number_of_likes
+        FROM tweets_by_word 
+        WHERE parsed_content LIKE %s 
+        ORDER BY number_of_likes DESC 
+        LIMIT 1;
+        """, (f'%{token}%',))
+        most_liked_tweet = cur.fetchone()
+        
+
+        # The content of the tweet containing the token with the most shares
+        cur.execute("""
+        SELECT content, author, number_of_shares
+        FROM tweets_by_word 
+        WHERE parsed_content LIKE %s 
+        ORDER BY number_of_shares DESC 
+        LIMIT 1;
+        """, (f'%{token}%',))
+        most_shared_tweet = cur.fetchone()
+
+        # Years it was most mentioned
+        cur.execute("""
+        SELECT EXTRACT(YEAR FROM date_time) AS year, COUNT(*) AS mention_count 
+        FROM tweets_by_word 
+        WHERE parsed_content LIKE %s 
+        GROUP BY year 
+        ORDER BY mention_count DESC 
+        LIMIT 1;
+        """, (f'%{token}%',))
+        top_year = cur.fetchone()
+
+        conn.close()
+
+        return jsonify({
+            'most_talked_about_country': top_country,
+            'top_liked_person': top_liked_person,
+            'most_liked_tweet': most_liked_tweet,
+            'most_shared_tweet': most_shared_tweet,
+            'year_most_mentioned': top_year
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 def get_sentiment(text):
     analyzer = SentimentIntensityAnalyzer()
     scores = analyzer.polarity_scores(text)

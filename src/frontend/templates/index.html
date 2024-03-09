@@ -64,5 +64,22 @@
         <button type="submit">Get tweet distribution</button>
     </form>
 
+    <h2>Top Tweets by Likes and Shares</h2>
+    <form action="/top_tweets" method="post">
+        <button type="submit">Get top tweets</button>
+    </form>
+
+    <h2>Top 10 Users by Content Volume</h2>
+    <form action="/top_users" method="post">
+        <button type="submit">Get 10 top users</button>
+    </form>
+
+    <h2>Analysis Based on Token</h2>
+    <form action="/token_analysis" method="post">
+        <label for="tokens">Enter tokens name</label><br>
+        <input type="text" id="tokens" name="tokens"><br>
+        <button type="submit">submit</button>
+    </form>
+
 </body>
 </html>
