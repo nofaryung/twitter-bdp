@@ -48,8 +48,12 @@ to access the service go port forwarding...or go ingress, in which case:
 the UI should be available via `http://twitty.com` in yr browser.
 
 ## Usage 📊
-Enter an authors name in the input box and press the button to recive a graph showing the distribution of the sentiment of their tweets
-press the second button to recive a graph of the amount of tweets by all authors
+option 1: Enter an authors name in the input box and press the button to recive a graph showing the distribution of the sentiment of their tweets
+option 2: press the second button to recive a graph of the amount of tweets by all authors
+option 3: Top Tweets by Likes and Shares
+option 4: Top 10 Users by Content Volume
+option 4: Analysis Based on Token - Enter tokens the analysis will be based on the table that partiotined by word
+
 
 ## Cleanup
 
