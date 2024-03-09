@@ -103,6 +103,14 @@ CREATE TABLE tweets_by_date_2015 PARTITION OF tweets_by_word FOR VALUES FROM (20
 CREATE TABLE tweets_by_date_2016 PARTITION OF tweets_by_word FOR VALUES FROM (2016) TO (2017);
 CREATE TABLE tweets_by_date_2017 PARTITION OF tweets_by_word FOR VALUES FROM (2017) TO (MAXVALUE);
 
+
+CREATE TABLE db_initialized (
+    id INT PRIMARY KEY
+);
+
+INSERT INTO db_initialized(id) VALUES (1);
+
+
 -- Utils
 
 CREATE OR REPLACE FUNCTION time_format(origin timestamp)
