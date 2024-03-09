@@ -54,11 +54,11 @@ the UI should be available via `http://twitty.com` in yr browser.
 
 ## Cleanup
 
-Delete all resources
+<!-- Delete all resources
 
 ```sh
 kubectl delete -f ./k8s -n twitty
-```
+``` -->
 
 Delete the namespace
 

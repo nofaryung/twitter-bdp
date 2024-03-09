@@ -9,20 +9,17 @@ spec:
   selector:
     app: digest   
 ---
-apiVersion: apps/v1
-kind: ReplicaSet
+apiVersion: batch/v1
+kind: Job
 metadata:
   name: digest
 spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: digest
   template:
     metadata:
       labels:
         app: digest
     spec:
+      restartPolicy: Never
       containers:
       - name: digest
         image:  yungmannofar/data_digest

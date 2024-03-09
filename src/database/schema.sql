@@ -1,10 +1,10 @@
-CREATE DATABASE twitty IF NOT EXISTS;
+CREATE DATABASE twitty;
 
 \connect twitty
 
 -- by likes and shares
 
-CREATE TABLE tweets_by_likes IF NOT EXISTS(
+CREATE TABLE tweets_by_likes (
     tweet_id bigint,
     author text,
     content text,
@@ -29,7 +29,7 @@ CREATE TABLE tweets_likes_very_high PARTITION OF tweets_by_likes
     FOR VALUES FROM (50000) TO (MAXVALUE);
 
 
-CREATE TABLE tweets_by_share IF NOT EXISTS(
+CREATE TABLE tweets_by_share (
     tweet_id bigint,
     author text,
     content text,
@@ -56,7 +56,7 @@ CREATE TABLE tweets_shares_very_high PARTITION OF tweets_by_share
 
 -- by User
 
-CREATE TABLE user_tweets IF NOT EXISTS(
+CREATE TABLE user_tweets (
     tweet_id BIGINT,
     author TEXT,
     content TEXT,
@@ -78,7 +78,7 @@ CREATE TABLE user_tweets_part4 PARTITION OF user_tweets FOR VALUES WITH (MODULUS
 
 -- by word
 
-CREATE TABLE tweets_by_word IF NOT EXISTS(
+CREATE TABLE tweets_by_word (
     tweet_id bigint,
     author text,
     content text,

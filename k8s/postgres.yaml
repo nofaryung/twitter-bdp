@@ -45,13 +45,13 @@ spec:
           value: postgres 
         - name: POSTGRES_USER
           value: postgresuser
-        - name: PGDATA
-          value: /var/lib/postgresql/data/twitty
-        volumeMounts:
-        - mountPath: /var/lib/postgresql/data
-          name: postgres-pv-claim
-      volumes:
-      - name: postgres-pv-claim
-        persistentVolumeClaim:
-          claimName: postgres-pv-claim      
+      #   - name: PGDATA
+      #     value: /var/lib/postgresql/data/twitty
+      #   volumeMounts:
+      #   - mountPath: /var/lib/postgresql/data
+      #     name: postgres-pv-claim
+      # volumes:
+      # - name: postgres-pv-claim
+      #   persistentVolumeClaim:
+      #     claimName: postgres-pv-claim    
 
