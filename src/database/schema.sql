@@ -1,4 +1,4 @@
-CREATE DATABASE twitty;
+-- CREATE DATABASE twitty;
 
 \connect twitty
 

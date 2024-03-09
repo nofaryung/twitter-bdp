@@ -72,6 +72,9 @@ def digest_data():
 
         print('Finished creating tweets_by_word')
 
+        cur.execute("""CREATE TABLE db_digested (id INT PRIMARY KEY);""")
+        cur.execute("""INSERT INTO db_digested(id) VALUES (1);""")
+
         # Commit the transaction
         conn.commit()
         print('Finished creating all tables')

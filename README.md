@@ -1,27 +1,23 @@
 
 # twitter insight k8s service 📝  
-bla bla
+The Twitter data processing application is designed to process and analyze Twitter data, providing insights into tweet distributions by author, sentiment analysis, and more. The application is containerized and designed to run within a Kubernetes environment, ensuring scalability and ease of deployment.
 
 ## Get Started 🚀  
-we are using minikube to  run the k8s cluster
+we are using minikube to run the k8s cluster
 
-### Install minikube
-`pip install minikube/brew install minikube`
-`minikube start`
-`minikube addons enable ingress`
-
-
-## Build the images 🔥  
-Build all the images
-
+## Install minikube 🛠️
 ```sh
-make
+pip install minikube/brew install minikube
 ```
 
-Or build specific images
-
+## start minikube 🌟
 ```sh
-make frontend
+minikube start
+```
+
+## enable ingress 🖌️
+```sh
+minikube addons enable ingress
 ```
 
 ### Create namespace
@@ -40,7 +36,7 @@ Create deployments and volumes
 kubectl apply -f ./k8s -n twitty
 ```
 
-## Access the frontend
+## Access the frontend 🌐
 
 Enable port forwarding
 
@@ -51,17 +47,16 @@ to access the service go port forwarding...or go ingress, in which case:
 
 the UI should be available via `http://twitty.com` in yr browser.
 
+## Usage 📊
+Enter an authors name in the input box and press the button to recive a graph showing the distribution of the sentiment of their tweets
+press the second button to recive a graph of the amount of tweets by all authors
 
 ## Cleanup
-
-<!-- Delete all resources
-
-```sh
-kubectl delete -f ./k8s -n twitty
-``` -->
 
 Delete the namespace
 
 ```sh
 kubectl delete namespace twitty
+minikube stop
+minikube delete
 ```

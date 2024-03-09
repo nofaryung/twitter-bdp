@@ -42,7 +42,7 @@ spec:
         - name: POSTGRES_PASSWORD
           value: postgrespassword
         - name: POSTGRES_DB
-          value: postgres 
+          value: twitty 
         - name: POSTGRES_USER
           value: postgresuser
       #   - name: PGDATA
